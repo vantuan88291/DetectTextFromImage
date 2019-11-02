@@ -46,7 +46,7 @@ Detect Text from live camera:
 
 In your layout xml, add it:
 ```
-<com.example.detectcam.DetectStream
+<com.tuan88291.textfromimages.DetectStream
             android:id="@+id/cam"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
