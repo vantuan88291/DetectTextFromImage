@@ -1,11 +1,12 @@
+
 # DetectTextFromImage
 Detect text from bitmap images and stream camera for android, using kotlin
 [![](https://jitpack.io/v/vantuan88291/DetectTextFromImage.svg)](https://jitpack.io/#vantuan88291/DetectTextFromImage)
 
 Make detect text from camera and image bitmap easier, see the code bellow to understand how to use it.
-Preference from google play-services-vision
+Preference from ***google play-services-vision***
 ### To use font resources add support library to your dependencies:
-add maven in to your build.gradle project
+add maven in to your **build.gradle** project
 
 ```gradle
 allprojects {
@@ -20,7 +21,7 @@ Add the dependency:
 
 `implementation 'com.github.vantuan88291:DetectTextFromImage:1.0'`
 
-Add permission into AndroidManifest:
+Add permission into ***AndroidManifest***:
 
 `<uses-permission android:name="android.permission.CAMERA" />`
 
@@ -31,7 +32,7 @@ Add permission into AndroidManifest:
 ### Usage
 Detect Text from Image Bitmap:
 
-In your activity, implement DetectBitmapListener and overwrite methods
+In your activity, implement ***DetectBitmapListener*** and overwrite methods
 
 ```
 val detect = DetectBitmap(this, this)
