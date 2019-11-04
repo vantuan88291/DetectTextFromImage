@@ -55,7 +55,7 @@ In your layout xml, add it:
 And your Activity:
 
 ```
-cam.setOnDetectListener(object : DetectContract {
+cam.setOnDetectListener(object : DetectStreamListener {
             override fun detectFail(msg: String) {
                 toast(msg)
             }
