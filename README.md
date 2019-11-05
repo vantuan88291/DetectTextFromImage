@@ -19,7 +19,7 @@ allprojects {
 
 Add the dependency:
 
-`implementation 'com.github.vantuan88291:DetectTextFromImage:1.2'`
+`implementation 'com.github.vantuan88291:DetectTextFromImage:1.3'`
 
 Add permission into ***AndroidManifest***:
 
