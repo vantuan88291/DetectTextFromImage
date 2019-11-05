@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.tuan88291.textfromimages.DetectBitmap
 import com.tuan88291.textfromimages.DetectBitmapListener
+import com.tuan88291.textfromimages.DetectStreamListener
 import easy.asyntask.tuan88291.library.AsyncTaskEasy
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.ByteArrayOutputStream
@@ -22,33 +23,42 @@ import java.io.ByteArrayOutputStream
 class MainActivity : AppCompatActivity(), DetectBitmapListener {
     val GALLERY: Int = 100
     var detect: DetectBitmap? = null
+    var isStop: Boolean = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         detect = DetectBitmap(this, this)
-//        cam.setOnDetectListener(object : DetectContract {
-//            override fun detectFail(msg: String) {
-//                toast(msg)
-//            }
-//
-//            override fun requestCamera() {
-//                requestForPermission()
-//            }
-//
-//            override fun detectSuccess(msg: String) {
-//                result.post {
-//                    result.text = msg
-//                }
-//            }
-//
-//        })
+        cam.setOnDetectListener(object : DetectStreamListener {
+            override fun detectFail(msg: String) {
+                toast(msg)
+            }
+
+            override fun requestCamera() {
+                requestForPermission()
+            }
+
+            override fun detectSuccess(msg: String) {
+                result.post {
+                    result.text = msg
+                }
+            }
+
+        })
         button.setOnClickListener {
-            startActivityForResult(
-                Intent(
-                    Intent.ACTION_PICK,
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                ), GALLERY
-            )
+//            startActivityForResult(
+//                Intent(
+//                    Intent.ACTION_PICK,
+//                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+//                ), GALLERY
+//            )
+            if (isStop) {
+                cam.stopCamera()
+                isStop = false
+            } else {
+                cam.startCamera()
+                isStop = true
+            }
+
         }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -103,7 +113,7 @@ class MainActivity : AppCompatActivity(), DetectBitmapListener {
 
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (isCameraPermissionGranted()) {
-//                cam.startCamera()
+                cam.startCamera()
             } else {
                 toast("Permission need to grant")
                 finish()

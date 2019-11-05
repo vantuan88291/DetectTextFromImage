@@ -104,4 +104,7 @@ class DetectStream: SurfaceView {
     fun startCamera() {
         mCameraSource.start(this.holder)
     }
+    fun stopCamera() {
+        mCameraSource.stop()
+    }
 }
