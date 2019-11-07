@@ -4,7 +4,11 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.util.AttributeSet
+import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.app.ActivityCompat
@@ -19,6 +23,7 @@ class DetectStream: SurfaceView {
     private var textRecognizer by Delegates.notNull<TextRecognizer>()
     private var mContext: Context? = null
     var callback: DetectStreamListener? = null
+    val blocks: MutableList<TextBlock> = mutableListOf()
     constructor(context: Context) : super(context) {
         this.mContext = context
         startCameraSource()
@@ -79,11 +84,12 @@ class DetectStream: SurfaceView {
 
             override fun receiveDetections(detections: Detector.Detections<TextBlock>) {
                 val items = detections.detectedItems
-
+//                for (i in 0..items.size() - 1) {
+//                    blocks.add(items.valueAt(i))
+//                }
                 if (items.size() <= 0) {
                     return
                 }
-
                     val stringBuilder = StringBuilder()
                     for (i in 0 until items.size()) {
                         val item = items.valueAt(i)
@@ -107,4 +113,26 @@ class DetectStream: SurfaceView {
     fun stopCamera() {
         mCameraSource.stop()
     }
+    private fun onGettingGraphics(): Pair<Paint, Paint> {
+        val rectPaint = Paint()
+        rectPaint.color = Color.RED
+        rectPaint.style = Paint.Style.STROKE
+        rectPaint.strokeWidth = 2F
+
+        val textPaint = Paint()
+        textPaint.color = Color.RED
+        textPaint.textSize = 60F
+
+        return Pair(rectPaint, textPaint)
+    }
+
+//    override fun onDraw(canvas: Canvas?) {
+//        super.onDraw(canvas)
+//        Log.d("in draw--------111", "on droaw")
+//    }
+//    override fun draw(canvas: Canvas?) {
+//        super.draw(canvas)
+//        Log.d("in draw--------", "on droaw")
+//
+//    }
 }

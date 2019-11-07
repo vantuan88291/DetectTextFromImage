@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat
 import com.tuan88291.textfromimages.DetectBitmap
 import com.tuan88291.textfromimages.DetectBitmapListener
 import com.tuan88291.textfromimages.DetectStreamListener
+import com.tuan88291.textfromimages.ModelBitmap
 import easy.asyntask.tuan88291.library.AsyncTaskEasy
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.ByteArrayOutputStream
@@ -45,20 +46,12 @@ class MainActivity : AppCompatActivity(), DetectBitmapListener {
 
         })
         button.setOnClickListener {
-//            startActivityForResult(
-//                Intent(
-//                    Intent.ACTION_PICK,
-//                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-//                ), GALLERY
-//            )
-            if (isStop) {
-                cam.stopCamera()
-                isStop = false
-            } else {
-                cam.startCamera()
-                isStop = true
-            }
-
+            startActivityForResult(
+                Intent(
+                    Intent.ACTION_PICK,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                ), GALLERY
+            )
         }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -77,14 +70,15 @@ class MainActivity : AppCompatActivity(), DetectBitmapListener {
         object : AsyncTaskEasy() {
             override fun doBackground(): Any {
                 val bytes = ByteArrayOutputStream()
-                val bitmap = getBitmap(uri!!)
+                val bitmap = getBitmap(uri)
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
                 return bitmap
             }
 
             override fun onSuccess(result: Any?) {
                 super.onSuccess(result)
-                detect?.getTextFromBitmap(result as Bitmap)
+//                imageView.setImageBitmap(result as Bitmap)
+//                detect?.getTextFromBitmap(result)
             }
         }
     }
@@ -134,8 +128,9 @@ class MainActivity : AppCompatActivity(), DetectBitmapListener {
 
     }
 
-    override fun detectBitmapSuccess(msg: String) {
-        result.text = msg
+    override fun detectBitmapSuccess(data: ModelBitmap) {
+//        imageView.setImageBitmap(data.bitmap)
+        result.text = data.msg
     }
 
     override fun onDetectLoading() {
