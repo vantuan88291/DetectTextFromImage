@@ -5,6 +5,11 @@ Detect text from bitmap images and stream camera for android, using kotlin
 
 Make detect text from camera and image bitmap easier, see the code bellow to understand how to use it.
 Preference from ***google play-services-vision***
+
+## Overview
+![DetectTextFromImage Android](https://github.com/vantuan88291/DetectTextFromImage/raw/master/dt1.jpg)![DetectTextFromImage Android](https://github.com/vantuan88291/DetectTextFromImage/raw/master/dt2.jpg)
+
+
 ### To use font resources add support library to your dependencies:
 add maven in to your **build.gradle** project
 
@@ -19,7 +24,7 @@ allprojects {
 
 Add the dependency:
 
-`implementation 'com.github.vantuan88291:DetectTextFromImage:1.3'`
+`implementation 'com.github.vantuan88291:DetectTextFromImage:1.4'`
 
 Add permission into ***AndroidManifest***:
 
@@ -38,8 +43,9 @@ In your activity, implement ***DetectBitmapListener*** and overwrite methods
 val detect = DetectBitmap(this, this)
 detect.getTextFromBitmap(bitmap)
 
-override fun detectBitmapSuccess(msg: String) {
-        result.text = msg
+override fun detectBitmapSuccess(data: ModelBitmap) {
+        imageView.setImageBitmap(data.bitmap)
+        result.text = data.msg
     }
 ```
 Detect Text from live camera:
