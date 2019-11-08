@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.Log
+import android.util.SparseArray
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.app.ActivityCompat
@@ -23,7 +24,6 @@ class DetectStream: SurfaceView {
     private var textRecognizer by Delegates.notNull<TextRecognizer>()
     private var mContext: Context? = null
     var callback: DetectStreamListener? = null
-    val blocks: MutableList<TextBlock> = mutableListOf()
     constructor(context: Context) : super(context) {
         this.mContext = context
         startCameraSource()
@@ -58,7 +58,7 @@ class DetectStream: SurfaceView {
 
         this.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceChanged(p0: SurfaceHolder?, p1: Int, p2: Int, p3: Int) {
-
+                Log.d("change=======", "iok")
             }
 
             override fun surfaceDestroyed(p0: SurfaceHolder?) {
@@ -84,9 +84,6 @@ class DetectStream: SurfaceView {
 
             override fun receiveDetections(detections: Detector.Detections<TextBlock>) {
                 val items = detections.detectedItems
-//                for (i in 0..items.size() - 1) {
-//                    blocks.add(items.valueAt(i))
-//                }
                 if (items.size() <= 0) {
                     return
                 }
@@ -113,26 +110,4 @@ class DetectStream: SurfaceView {
     fun stopCamera() {
         mCameraSource.stop()
     }
-    private fun onGettingGraphics(): Pair<Paint, Paint> {
-        val rectPaint = Paint()
-        rectPaint.color = Color.RED
-        rectPaint.style = Paint.Style.STROKE
-        rectPaint.strokeWidth = 2F
-
-        val textPaint = Paint()
-        textPaint.color = Color.RED
-        textPaint.textSize = 60F
-
-        return Pair(rectPaint, textPaint)
-    }
-
-//    override fun onDraw(canvas: Canvas?) {
-//        super.onDraw(canvas)
-//        Log.d("in draw--------111", "on droaw")
-//    }
-//    override fun draw(canvas: Canvas?) {
-//        super.draw(canvas)
-//        Log.d("in draw--------", "on droaw")
-//
-//    }
 }
