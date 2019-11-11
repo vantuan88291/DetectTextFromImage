@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -29,22 +30,22 @@ class MainActivity : AppCompatActivity(), DetectBitmapListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         detect = DetectBitmap(this, this)
-        cam.setOnDetectListener(object : DetectStreamListener {
-            override fun detectFail(msg: String) {
-                toast(msg)
-            }
-
-            override fun requestCamera() {
-                requestForPermission()
-            }
-
-            override fun detectSuccess(msg: String) {
-                result.post {
-                    result.text = msg
-                }
-            }
-
-        })
+//        cam.setOnDetectListener(object : DetectStreamListener {
+//            override fun detectFail(msg: String) {
+//                toast(msg)
+//            }
+//
+//            override fun requestCamera() {
+//                requestForPermission()
+//            }
+//
+//            override fun detectSuccess(msg: String) {
+//                result.post {
+//                    result.text = msg
+//                }
+//            }
+//
+//        })
         button.setOnClickListener {
             startActivityForResult(
                 Intent(
@@ -69,29 +70,29 @@ class MainActivity : AppCompatActivity(), DetectBitmapListener {
     private fun processImagr(uri: Uri) {
         object : AsyncTaskEasy() {
             override fun doBackground(): Any {
-                val bytes = ByteArrayOutputStream()
-                val bitmap = getBitmap(uri)
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
-                return bitmap
+//                val bytes = ByteArrayOutputStream()
+//                val bitmap = getBitmap(uri)
+//                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
+//                return bitmap
+                val bmOptions = BitmapFactory.Options()
+                bmOptions.inJustDecodeBounds = true
+                BitmapFactory.decodeStream(this@MainActivity.getContentResolver().openInputStream(uri), null, bmOptions)
+                val photoW = bmOptions.outWidth
+                val photoH = bmOptions.outHeight
+                val scaleFactor = Math.min(photoW / 600, photoH / 600)
+                bmOptions.inJustDecodeBounds = false
+                bmOptions.inSampleSize = scaleFactor
+                return BitmapFactory.decodeStream(
+                    this@MainActivity.getContentResolver()
+                        .openInputStream(uri), null, bmOptions
+                )
             }
 
             override fun onSuccess(result: Any?) {
                 super.onSuccess(result)
 //                imageView.setImageBitmap(result as Bitmap)
-//                detect?.getTextFromBitmap(result)
+                detect?.getTextFromBitmap(result as Bitmap)
             }
-        }
-    }
-    private fun getBitmap(uri: Uri): Bitmap {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val source = ImageDecoder.createSource(this.contentResolver, uri)
-            return ImageDecoder.decodeBitmap(source)
-        } else {
-            val bm = MediaStore.Images.Media.getBitmap(
-                this.contentResolver,
-                uri
-            )
-            return bm
         }
     }
     @SuppressLint("MissingPermission")
@@ -107,7 +108,7 @@ class MainActivity : AppCompatActivity(), DetectBitmapListener {
 
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (isCameraPermissionGranted()) {
-                cam.startCamera()
+//                cam.startCamera()
             } else {
                 toast("Permission need to grant")
                 finish()
